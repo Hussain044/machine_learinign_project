@@ -92,3 +92,7 @@ Tos stop docker conatiner
 ```
 docker stop <container_id>
 ```
+
+Data Drift:
+When your dataset stats gets change we call it as data drift
+if two dataset is different in terms of stats then we call it as data drift
