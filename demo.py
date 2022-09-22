@@ -10,6 +10,8 @@ def main():
         pipeline.run_pipeline()
         # data_transformation_config = Configuration().get_data_transformation_config()
         # print(data_transformation_config)
+        # model_trainer_config = Configuration().get_model_trainer_config()
+        # print(model_trainer_config)
     except Exception as e:
         logging.error(f"e")
         print(e)

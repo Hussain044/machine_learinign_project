@@ -4,7 +4,7 @@ import os
 from housing.constant import *
 from housing.exception import HousingException
 from housing.util.util import read_yaml_file
-from housing.entity.config_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig, ModelPushConfig, TrainingPipelineConfig
+from housing.entity.config_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig, ModelPusherConfig, TrainingPipelineConfig
 TrainingPipelineConfig
 
 
@@ -120,13 +120,54 @@ class Configuration:
             raise HousingException(e, sys) from e
 
     def get_model_trainer_config(self) -> ModelTrainerConfig:
-        pass
+        try:
+            artifact_dir = self.training_pipeline_config.artifact_dir
+            model_trainer_artifact_dir = os.path.join(
+                artifact_dir, MODEL_TRAINER_ARTIFACT_DIR, self.time_stamp)
+            model_trainer_config_info = self.config_info[MODEL_TRAINER_CONFIG_KEY]
+            trained_model_file_path = os.path.join(
+                model_trainer_artifact_dir, model_trainer_config_info[
+                    MODEL_TRAINER_TRAINED_MODEL_DIR_KEY],
+                model_trainer_config_info[MODEL_TRAINER_MODEL_FILE_NAME_KEY])
+            model_cofig_file_path = os.path.join(ROOT_DIR,
+                                                 model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_DIR_KEY],
+                                                 model_trainer_config_info[MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY])
+            base_accuracy = model_trainer_config_info[MODEL_TRAINER_BASE_ACCURACY_KEY]
+            model_trainer_config = ModelTrainerConfig(trained_model_file_path=trained_model_file_path,
+                                                      base_accuracy=base_accuracy,
+                                                      model_config_file_path=model_cofig_file_path)
+            return model_trainer_config
+
+        except Exception as e:
+            raise HousingException(e, sys) from e
 
     def get_model_evaluation_config(self) -> ModelEvaluationConfig:
-        pass
+        try:
+            model_evaluation_config = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
+            artifact_dir = self.training_pipeline_config.artifact_dir
+            model_evaluation_artifact_dir = os.path.join(
+                artifact_dir, MODEL_EVALUATION_ARTIFACT_DIR)
+            model_evaluation_file_path = os.path.join(model_evaluation_artifact_dir,
+                                                      model_evaluation_config[MODEL_EVALUATION_FILE_NAME_KEY])
+            model_evaluation_config = ModelEvaluationConfig(evaluated_model_file_path=model_evaluation_file_path,
+                                                            time_stamp=self.time_stamp)
+            logging.info(f"Model evaluation config: {model_evaluation_config}")
+            return model_evaluation_config
+        except Exception as e:
+            raise HousingException(e, sys) from e
 
-    def get_model_pusher_config(self) -> ModelPushConfig:
-        pass
+    def get_model_pusher_config(self) -> ModelPusherConfig:
+        try:
+            time_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
+            model_pusher_config = self.config_info[MODEL_PUSHER_CONFIG_KEY]
+            export_dir_path = os.path.join(
+                ROOT_DIR, model_pusher_config[MODEL_EXPORT_DIR_KEY], time_stamp)
+            model_pusher_config = ModelPusherConfig(
+                export_dir_path=export_dir_path)
+            logging.info(f"Model pusher config {model_pusher_config}")
+            return model_pusher_config
+        except Exception as e:
+            raise HousingException(e, sys) from e
 
     def get_training_pipeline_config(self) -> TrainingPipelineConfig:
         try:
