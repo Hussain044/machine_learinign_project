@@ -2,6 +2,9 @@ import os
 import sys
 from datetime import datetime
 
+def get_current_time_stamp():
+    return f"{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
+
 ROOT_DIR = os.getcwd()  # get current working directory
 
 CONFIG_DIR = 'config'
@@ -80,3 +83,6 @@ HISTORY_KEY = 'model_history'
 #Model Pusher Config
 MODEL_PUSHER_CONFIG_KEY = 'model_pusher_config'
 MODEL_EXPORT_DIR_KEY = 'model_export_dir'
+
+EXPERIMENT_DIR_NAME="experiment"
+EXPERIMENT_FILE_NAME="experiment.csv"
