@@ -130,6 +130,7 @@ def predict():
                                    ocean_proximity=ocean_proximity,
                                    )
         housing_df = housing_data.get_housing_input_data_frame()
+        logging.info(f"housing_df: {housing_df}")
         housing_predictor = HousingPredictor(model_dir=MODEL_DIR)
         median_housing_value = housing_predictor.predict(X=housing_df)
         context = {

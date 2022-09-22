@@ -22,7 +22,7 @@ class ModelPusher:
             export_dir = self.model_pusher_config.export_dir_path
 
             model_file_name = os.path.basename(eval_model_path)
-            export_model_file_path = os.path.join(export_dir, model_file_name)
+            export_model_file_path = os.path.join(export_dir)
             logging.info(f"Export dir file path:{export_model_file_path}")
             os.makedirs(export_model_file_path, exist_ok=True)
 
